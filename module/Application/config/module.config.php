@@ -116,6 +116,10 @@ return array(
                     ),
                 ),
             ),
+            array(
+                'label' => 'Login',
+                'route' => 'login',
+            ),
         ),
     ),
 );
