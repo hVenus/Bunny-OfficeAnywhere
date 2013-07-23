@@ -16,7 +16,7 @@ class LoginForm extends Form {
         ));
         $this->add(array(
             'name' => 'loginpassword',
-            'type' => 'Text',
+            'type' => 'Password',
             'options' => array(
                 'label' => 'Password',
             ),

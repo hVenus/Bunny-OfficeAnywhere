@@ -20,11 +20,16 @@ class LoginController extends AbstractActionController {
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+
+//                $sm = $this->getServiceLocator();
+//                $adapter = $sm->get('Zend\Db\Adapter\Adapter');
+
                 $login->exchangeArray($form->getData());
 
 
+
                 // Redirect to list of albums
-                return $this->redirect()->toRoute('home');
+                //return $this->redirect()->toRoute('home');
             }
         }
 

@@ -5,7 +5,7 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
-
+use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 
 class Login implements InputFilterAwareInterface {
 
@@ -16,6 +16,25 @@ class Login implements InputFilterAwareInterface {
     public function exchangeArray($data){
         $this->loginname = (isset($data['loginname']))?$data['loginname']:null;
         $this->loginpassword = (isset($data['loginpassword']))?$data['loginpassword']:null;
+        $e->getApplication()->getServiceManager()->get('Zend\Db\Adapter\Adapter');
+        $dbAdapter = \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter();
+//        $dbAdapter = $db;
+//        $authAdapter = new AuthAdapter($dbAdapter,
+//            'users',
+//            'username',
+//            'password'
+//        );
+
+        // Set the input credential values (e.g., from a login form)
+//        $authAdapter
+//            ->setIdentity($this->loginname)
+//            ->setCredential($this->loginpassword);
+
+// Print the identity
+       // echo $result->getIdentity() . "\n\n";
+
+// Print the result row
+//        print_r($authAdapter->getResultRowObject());
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter){
