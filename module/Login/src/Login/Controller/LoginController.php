@@ -5,6 +5,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Login\Model\Login;
 use Login\Form\LoginForm;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
+use Zend\Authentication\Result;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Storage\Session as SessionStorage;
 
 class LoginController extends AbstractActionController {
 
@@ -25,26 +28,38 @@ class LoginController extends AbstractActionController {
 
                 $data = $form->getData();
                 $db = $this->getAdapter(); // 获取db
+                $auth = new AuthenticationService();
+                $auth->setStorage(new SessionStorage('OASession')); // 用来存储用户Session
                 // 新建一个auth adapter
-                $auth = new AuthAdapter($db,
+                $AuthAdapter = new AuthAdapter($db,
                     'users', // 表名
                     'username', // 用户名字段
                     'password', // 密码字段
                     'MD5(?) AND status = 0' // 加密算法
                 );
                 // 设置验证的数据,用传进来的登录表单数据。
-                $auth->setIdentity($data['loginname'])->setCredential($data['loginpassword']);
-                $result = $auth->authenticate(); // 验证
-                $r = $result->getCode(); // 返回验证结果
-                if($r == 1){
-                    // 1为验证通过, -3是密码不对, -1是用户名不存在.
-                    // Redirect to home
-                    return $this->redirect()->toRoute('home');
+                $AuthAdapter->setIdentity($data['loginname'])->setCredential($data['loginpassword']);
+                $result = $auth->authenticate($AuthAdapter); // 验证
+                switch ($result->getCode()) {
+                    case Result::FAILURE_IDENTITY_NOT_FOUND:
+                        /** do stuff for nonexistent identity **/
+                        echo "FAILURE_IDENTITY_NOT_FOUND";
+                        break;
+                    case Result::FAILURE_CREDENTIAL_INVALID:
+                        /** do stuff for invalid credential **/
+                        echo "FAILURE_CREDENTIAL_INVALID";
+                        break;
+                    case Result::SUCCESS:
+                        // Redirect to home
+                        return $this->redirect()->toRoute('home');
+                        break;
+                    default:
+                        /** do stuff for other failure **/
+                        echo "Failure.";
+                        break;
                 }
-                //$message = $result->getMessages();
             }
         }
-
         return array('form' => $form); // 显示Form
     }
 

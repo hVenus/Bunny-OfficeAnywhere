@@ -15,6 +15,8 @@ return array(
     'db' => array(
         'driver' => 'Pdo',
         'dsn' => 'mysql:dbname=zfoa;host=localhost',
+        'username' => 'root',
+        'password' => '123456',
         'driver_options' => array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ),
@@ -22,6 +24,21 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+        ),
+    ),
+    'session' => array(
+        'config' => array(
+            'class' => 'Zend\Session\Config\SessionConfig',
+            'options' => array(
+                'name' => 'OASession',
+            ),
+        ),
+        'storage' => 'Zend\Session\Storage\SessionArrayStorage',
+        'validators' => array(
+            array(
+                'Zend\Session\Validator\RemoteAddr',
+                'Zend\Session\Validator\HttpUserAgent',
+            ),
         ),
     ),
 );
