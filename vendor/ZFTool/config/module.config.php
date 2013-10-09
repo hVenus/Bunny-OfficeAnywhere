@@ -6,20 +6,22 @@ return array(
 
     // -----=-----=-----=-----=-----=-----=-----=-----=-----=-----=-----=-----=-----=-----=-----=-----=
 
-    'service_manager' => array(
-        'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
+    'controllers' => array(
+        'invokables' => array(
+            'ZFTool\Controller\Info'        => 'ZFTool\Controller\InfoController',
+            'ZFTool\Controller\Config'        => 'ZFTool\Controller\ConfigController',
+            'ZFTool\Controller\Module'      => 'ZFTool\Controller\ModuleController',
+            'ZFTool\Controller\Classmap'    => 'ZFTool\Controller\ClassmapController',
+            'ZFTool\Controller\Create'      => 'ZFTool\Controller\CreateController',
+            'ZFTool\Controller\Install'     => 'ZFTool\Controller\InstallController',
+            'ZFTool\Controller\Diagnostics' => 'ZFTool\Controller\DiagnosticsController',
         ),
     ),
 
-    'controllers' => array(
-        'invokables' => array(
-            'ZFTool\Controller\Info'     => 'ZFTool\Controller\InfoController',
-            'ZFTool\Controller\Module'   => 'ZFTool\Controller\ModuleController',
-            'ZFTool\Controller\Classmap' => 'ZFTool\Controller\ClassmapController',
-            'ZFTool\Controller\Create'   => 'ZFTool\Controller\CreateController',
-            'ZFTool\Controller\Install'  => 'ZFTool\Controller\InstallController',
-        ),
+    'view_manager' => array(
+        'template_map' => array(
+            'zf-tool/diagnostics/run' => __DIR__ . '/../view/diagnostics/run.phtml',
+        )
     ),
 
     'console' => array(
@@ -45,10 +47,19 @@ return array(
                 ),
                 'zftool-config-list' => array(
                     'options' => array(
-                        'route'    => 'config [list]',
+                        'route'    => 'config list [--local|-l]:local',
                         'defaults' => array(
-                            'controller' => 'ZFTool\Controller\Info',
-                            'action'     => 'config',
+                            'controller' => 'ZFTool\Controller\Config',
+                            'action'     => 'list',
+                        ),
+                    ),
+                ),
+                'zftool-config' => array(
+                    'options' => array(
+                        'route'    => 'config <action> [<arg1>] [<arg2>]',
+                        'defaults' => array(
+                            'controller' => 'ZFTool\Controller\Config',
+                            'action'     => 'get',
                         ),
                     ),
                 ),
@@ -88,6 +99,24 @@ return array(
                         ),
                     ),
                 ),
+                'zftool-create-controller' => array(
+                    'options' => array(
+                        'route'    => 'create controller <name> <module> [<path>]',
+                        'defaults' => array(
+                            'controller' => 'ZFTool\Controller\Create',
+                            'action'     => 'controller',
+                        ),
+                    ),
+                ),
+                'zftool-create-action' => array(
+                    'options' => array(
+                        'route'    => 'create action <name> <controllerName> <module>',
+                        'defaults' => array(
+                            'controller' => 'ZFTool\Controller\Create',
+                            'action'     => 'method',
+                        ),
+                    ),
+                ),
                 'zftool-install-zf' => array(
                     'options' => array(
                         'route'    => 'install zf <path> [<version>]',
@@ -97,8 +126,22 @@ return array(
                         ),
                     ),
                 ),
+                'zftool-diagnostics' => array(
+                    'options' => array(
+                        'route'    => '(diagnostics|diag) [-v|--verbose]:verbose [--debug] [-q|--quiet]:quiet [-b|--break]:break [<testGroupName>]',
+                        'defaults' => array(
+                            'controller' => 'ZFTool\Controller\Diagnostics',
+                            'action'     => 'run',
+                        ),
+                    ),
+                ),
             ),
         ),
     ),
 
+    'diagnostics' => array(
+        'ZF' => array(
+            'PHP Version' => array('ZFTool\Diagnostics\Test\PhpVersion', '5.3.3'),
+        )
+    )
 );

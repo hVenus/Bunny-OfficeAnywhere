@@ -36,7 +36,7 @@ class DateTimeFormatter extends AbstractFilter
      * Set the format string accepted by date() to use when formatting a string
      *
      * @param  string $format
-     * @return \Zend\Filter\DateTimeFormatter
+     * @return self
      */
     public function setFormat($format)
     {
@@ -66,19 +66,19 @@ class DateTimeFormatter extends AbstractFilter
     /**
      * Normalize the provided value to a formatted string
      *
-     * @param string|int|DateTime $value
-     * @returns string
+     * @param  string|int|DateTime $value
+     * @return string
      */
     protected function normalizeDateTime($value)
     {
         if ($value === '' || $value === null) {
             return $value;
         } elseif (is_int($value)) {
-            $dateTime = new DateTime('@' . $value);
+            $value = new DateTime('@' . $value);
         } elseif (!$value instanceof DateTime) {
-            $dateTime = new DateTime($value);
+            $value = new DateTime($value);
         }
 
-        return $dateTime->format($this->format);
+        return $value->format($this->format);
     }
 }
